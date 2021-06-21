@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nc-nginx-exporter
+  namespace: nexclipper
+  labels:
+    app: nc-nginx-exporter
+spec:
+  selector:
+    matchLabels:
+      app: nc-nginx-exporter
+  template:
+    metadata:
+      labels:
+        app: nc-nginx-exporter
+    spec:
+      containers:
+      - name: nginx-exporter
+        image: 'nginx/nginx-prometheus-exporter:0.9.0'
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        env:
+        - name: APP
+          value: ${APP}
+        - name: NAMESPACE
+          value: ${NAMESPACE}
+        - name: SVC
+          value: ${SVC}
+        - name: PORT
+          value: ${PORT}
+        args:
+          # - '-nginx.scrape-uri=http://$(APP).$(NAMESPACE).$(SVC):$(PORT)/stub_status'
+          - '-nginx.scrape-uri=http://nginx.default.svc.cluster.local:8080/stub_status'
+        ports:
+          - name: nginx-ex-port
+            containerPort: 9113
+            protocol: TCP
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nc-nginx-exporter
+  name: nc-nginx-exporter
+  namespace: nexclipper
+spec:
+  ports:
+  - port: 9113
+    protocol: TCP
+    targetPort: 9113
+    name: metrics
+  selector:
+    app: nc-nginx-exporter
+  sessionAffinity: None
+  type: ClusterIP
+
