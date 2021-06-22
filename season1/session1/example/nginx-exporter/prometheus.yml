@@ -8,25 +8,22 @@
     regex: nexclipper;exporterhub
     source_labels:
     - __meta_kubernetes_namespace
-    - __meta_kubernetes_service_label_managed
+    - __meta_kubernetes_pod_label_managed
   - action: replace
-    source_labels: [__meta_kubernetes_service_label_app]
+    source_labels: [__meta_kubernetes_pod_label_app]
     target_label: component
   - action: replace
-    source_labels: [__meta_kubernetes_service_label_managed]
+    source_labels: [__meta_kubernetes_pod_label_managed]
     target_label: managed_by
   - action: replace
     source_labels: [__meta_kubernetes_pod_node_name]
     target_label: kubernetes_node
   - action: replace
     source_labels: [__meta_kubernetes_pod_controller_kind]
-    target_label: kubernetes_node
+    target_label: kubernetes_kind
   - action: replace
-    source_labels: [__meta_kubernetes_pod_controller_name]
-    target_label: kubernetes_node
+    source_labels: [__meta_kubernetes_pod_name]
+    target_label: kubernetes_pod_name
   - action: replace
     source_labels: [__meta_kubernetes_namespace]
     target_label: namespace
-  - action: replace
-    source_labels: [__meta_kubernetes_service_name]
-    target_label: kubernetes_name

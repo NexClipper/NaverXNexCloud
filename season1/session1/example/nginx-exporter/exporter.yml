@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nc-nginx-exporter
+  name: nginx-exporter
   namespace: nexclipper
   labels:
     app: nginx-exporter
@@ -53,7 +53,7 @@ metadata:
   labels:
     app: nginx-exporter
     managed: exporterhub
-  name: nc-nginx-exporter
+  name: nginx-exporter
   namespace: nexclipper
 spec:
   ports:
@@ -62,7 +62,7 @@ spec:
     targetPort: 9113
     name: metrics
   selector:
-    app: nc-nginx-exporter
+    app: nginx-exporter
   sessionAffinity: None
   type: ClusterIP
 
